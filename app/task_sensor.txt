@@ -20,7 +20,7 @@ asociados al botón.
 
 // -----------------------------------------------------------------
 
-Tipos de datos y funciones definidas en 'task_sensor.c':
+Estructuras y funciones definidas en 'task_sensor.c':
 
 - Se definen dos variables de los tipos struct 'task_sensor_cfg_t' y 'task_sensor_dta_t', llamadas
 'task_sensor_cfg_list' y 'task_sensor_dta_list' respectivamente.
@@ -40,12 +40,3 @@ es necesario.
 'EV_BTN_XX_UP' (el botón se suelta), y en caso de ser verdadero, se dispara el evento 'signal_down' y se cambia al estado
 'ST_BTN_XX_DOWN'.
 	Resumidamente, constituye la implementación de un diagrama de estados para el modelo del sensor (botón).
-
-
-
-
-
-
-
-
-

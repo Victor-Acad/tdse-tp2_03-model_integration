@@ -19,7 +19,7 @@ el estado actual del sistema (tipo 'task_system_st_t'), el evento que está sien
 
 // -----------------------------------------------------------------
 
-Tipos de datos y funciones definidas en 'task_system.c':
+Estructuras y funciones definidas en 'task_system.c':
 
 - Se define una variable del tipos struct 'task_system_data_t' llamada 'task_system_data', que posee
 una sola entrada (pues solo consideramos 1 único sistema). Esto inicializa al sistema con los
@@ -41,7 +41,8 @@ Además, se llama a 'init_queue_event_task_system()' (declarada en 'task_system_
 	  ('p_task_system_dta->event').
 	- Luego, viene la implementación de la máquina o diagrama de estados en sí:
 	  - Se hace un switch en base al parámetro 'p_task_system_dta->state' (estado actual del sistema) y se implementa la
-	    lógica a seguir para cada estado (lo cual incluye controlar los actuadores, mediante 'put_event_task_actuator').
+	    lógica a seguir para cada estado (lo cual incluye controlar los actuadores, mediante 'put_event_task_actuator',
+	    declarada en 'task_actuator_interface.c').
 
 // -----------------------------------------------------------------
 

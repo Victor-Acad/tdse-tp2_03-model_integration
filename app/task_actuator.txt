@@ -5,3 +5,47 @@
    Non-Blocking Code
 
 ...
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+Tipos de datos definidos en 'task_actuator_attribute.h':
+
+- Se definen dos tipos enum 'task_actuator_ev_t' y 'task_actuator_st_t' que poseen la lista de eventos y
+estados asociados al actuador, respectivamente.
+
+- Se define un tipo enum 'task_actuator_id_t' que posee los identificadores de los actuadores.
+
+- Tipo struct 'task_actuator_cfg_t' que contiene una serie de atributos de configuración del actuador, como
+su identificador, el pin asociado, el estado de dicho pin cuando el actuador está encendido o apagado, y
+dos variables de configuración 'tick' ('tick_blink' y 'tick_pulse', para efectos de parpadeo o pulsación).
+
+- Tipo struct 'task_actuator_dta_t' que contiene datos del actuador, como su estado actual y el valor de su
+variable 'tick'.
+
+// -----------------------------------------------------------------
+
+Función definida en 'task_actuator_interface.c':
+
+- Se declara la función 'void put_event_task_actuator(task_actuator_ev_t event, task_actuator_id_t identifier)',
+cuyo propósito es actualizar el evento disparado asociado a un determinado actuador (al cual se accede mediante
+su identificador). Esta es la función llamada por el sistema para que los actuadores puedan actualizar sus estados
+en base a los eventos ('task_actuator_interface.h' la define como función externa).
+
+// -----------------------------------------------------------------
+
+Estructuras y funciones definidas en 'task_actuator.c':
+
+- Se definen dos variables de los tipos struct 'task_actuator_cfg_t' y 'task_actuator_dta_t', llamadas
+'task_actuator_cfg_list' y 'task_actuator_dta_list' respectivamente.
+
+- Se definen dos funciones 'void task_actuator_init(void *parameters)' y 'void task_actuator_update(void *parameters)',
+que corresponden, respectivamente, a las funciones de inicialización y actualización para el modelo de actuador.
+
+- En la primera, se imprimen datos por consola y se inicializa 'g_task_actuator_cnt' (g_task_actuator_cnt = G_TASK_ACT_CNT_INIT).
+
+- En la segunda, se evalúa el estado de la variable booleana 'b_time_update_required', para saber si el actuador debe
+actualizar su estado o no. Esto último se hace en base al estado actual del actuador utilizándose una estructura del tipo
+switch-case para evaluar las distintas opciones.
+	Vemos que por defecto maneja los cambios de estado entre ('ST_LED_XX_OFF' y 'ST_LED_XX_ON'), mientras que no hace nada
+para los estados 'ST_LED_XX_BLINK_ON', 'ST_LED_XX_BLINK_OFF' y 'ST_LED_XX_PULSE'.
+	Resumidamente, constituye la implementación de un diagrama de estados para el modelo del actuador (LED).
