@@ -18,6 +18,8 @@ su identificador, el pin asociado, así como una serie de eventos a producir.
 - Tipo struct 'task_sensor_dta_t' que contiene datos adicionales del sensor, como los estados y eventos
 asociados al botón.
 
+// -----------------------------------------------------------------
+
 Tipos de datos y funciones definidas en 'task_sensor.c':
 
 - Se definen dos variables de los tipos struct 'task_sensor_cfg_t' y 'task_sensor_dta_t', llamadas

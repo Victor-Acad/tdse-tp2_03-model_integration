@@ -8,3 +8,57 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+Tipos de datos definidos en 'task_system_attribute.h':
+
+- Se definen dos tipos enum 'task_system_ev_t' y 'task_system_st_t' que poseen la lista de eventos que
+excitan al sistema, y la lista de estados del sistema, respectivamente.
+
+- Tipo struct 'task_system_dta_t', que contiene datos del sistema (una variable 'uint32_t' tick,
+el estado actual del sistema (tipo 'task_system_st_t'), el evento que está siendo recibido (tipo
+'task_system_ev_t', y una 'flag' (valor booleano)).
+
+// -----------------------------------------------------------------
+
+Tipos de datos y funciones definidas en 'task_system.c':
+
+- Se define una variable del tipos struct 'task_system_data_t' llamada 'task_system_data', que posee
+una sola entrada (pues solo consideramos 1 único sistema). Esto inicializa al sistema con los
+valores '{DEL_SYS_XX_MIN, ST_SYS_XX_IDLE, EV_SYS_XX_IDLE, false}'.
+
+- Se definen dos funciones 'void task_system_init(void *parameters)' y 'void task_system_update(void *parameters)',
+que corresponden, respectivamente, a las funciones de inicialización y actualización para el modelo de sistema.
+
+- En la primera, se imprimen datos por consola y se inicializa 'g_task_system_cnt' (g_task_system_cnt = G_TASK_SYS_CNT_INI).
+Además, se llama a 'init_queue_event_task_system()' (declarada en 'task_system_interface.c').
+
+- En la segunda ('task_system_update'):
+	- Se actualiza (incrementa) el contador 'g_task_system_cnt'.
+	- Se marca 'b_time_update_required' como 'true' si hay ticks pendientes por procesar (protegido contra interrupciones).
+	- Bucle 'while(b_time_update_required)', se ejecuta mientras haya ticks pendientes por procesar (procesando uno por vuelta).
+	- Se actualiza el puntero ('p_task_system_dta').
+	- Se consulta si hay algún evento disparado asociado al sistema ('any_event_task_system()'), y de ser así
+	  se asigna dicho evento (obtenido mediante 'get_event_task_system()') al campo event de 'p_task_system_dta'
+	  ('p_task_system_dta->event').
+	- Luego, viene la implementación de la máquina o diagrama de estados en sí:
+	  - Se hace un switch en base al parámetro 'p_task_system_dta->state' (estado actual del sistema) y se implementa la
+	    lógica a seguir para cada estado (lo cual incluye controlar los actuadores, mediante 'put_event_task_actuator').
+
+// -----------------------------------------------------------------
+
+Estructuras y funciones definidas en 'task_system_interface.c':
+
+- La idea general es la implementación de una cola circular de eventos, de tamaño 'MAX_EVENTS = 16'.
+
+- Se declara una estructura de nombre 'queue_task_a', que posee los campos 'head', 'tail', 'count' y 'queue[MAX_EVENTS]'.
+
+- La primera función ('void init_queue_event_task_system') inicializa la cola (coloca 'head', 'tail' y 'count' en 0),
+y la llena con eventos indefinidos ('255' que puede verse como '-1').
+
+- La segunda función ('void put_event_task_system(task_system_ev_t event)') inserta un evento en la cola y actualiza head
+y count (los incrementa en 1), si nos pasamos de 16 ('MAX_EVENTS') 'head' se resetea a 0 (para que sea circular).
+
+- La tercera función ('task_system_ev_t get_event_task_system(void)') extrae un evento de la cola, reemplazándolo por
+un evento indefinido y reseteando 'tail' a 0 si hace falta. Devuelve el evento extraido.
+
+- La cuarta función ('bool any_event_task_system(void)') es bastante simple, y devuelve 'true' si hay eventos en la cola
+implementada, lo cual será cierto si 'head != tail'.
