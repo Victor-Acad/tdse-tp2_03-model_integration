@@ -62,7 +62,7 @@
 
 /********************** internal data declaration ****************************/
 task_system_dta_t task_system_dta =
-	{DEL_SYS_XX_MIN, ST_SYS_XX_IDLE, EV_SYS_XX_IDLE, false};
+	{DEL_SYS_XX_MIN, ST_SYS_XX_WAIT_VEHICLE, EV_SYS_XX_DUMMY, false};
 
 #define SYSTEM_DTA_QTY	(sizeof(task_system_dta)/sizeof(task_system_dta_t))
 
@@ -154,24 +154,55 @@ void task_system_update(void *parameters)
 
 		switch (p_task_system_dta->state)
 		{
-			case ST_SYS_XX_IDLE:
 
-				if ((true == p_task_system_dta->flag) && (EV_SYS_XX_ACTIVE == p_task_system_dta->event))
+			case ST_SYS_XX_WAIT_VEHICLE:
+
+				if ((true == p_task_system_dta->flag) && ( (EV_SYS_XX_LOOP_DETECTOR_UP == p_task_system_dta->event) || (EV_SYS_XX_MANUAL_UP == p_task_system_dta->event)))
 				{
 					p_task_system_dta->flag = false;
-					put_event_task_actuator(EV_LED_XX_ON, ID_LED_A);
-					p_task_system_dta->state = ST_SYS_XX_ACTIVE;
+					put_event_task_actuator(EV_LED_XX_ON, ID_LED_A); // UPDATE LED ONCE THAT'S IMPLEMENTED.
+					p_task_system_dta->state = ST_SYS_XX_WAIT_BARRIER_RAISE;
+
+//					LOGGER_LOG("'WAIT_VEHICLE' > 'WAIT_BARRIER_RAISE'.\n"); // Print para debug.
 				}
 
 				break;
 
-			case ST_SYS_XX_ACTIVE:
+			case ST_SYS_XX_WAIT_BARRIER_RAISE:
 
-				if ((true == p_task_system_dta->flag) && (EV_SYS_XX_IDLE == p_task_system_dta->event))
+				if ((true == p_task_system_dta->flag) && (EV_SYS_XX_VERT_LIMIT_UP == p_task_system_dta->event))
 				{
 					p_task_system_dta->flag = false;
-					put_event_task_actuator(EV_LED_XX_OFF, ID_LED_A);
-					p_task_system_dta->state = ST_SYS_XX_IDLE;
+					put_event_task_actuator(EV_LED_XX_OFF, ID_LED_A); // UPDATE LED ONCE THAT'S IMPLEMENTED.
+					p_task_system_dta->state = ST_SYS_XX_WAIT_VEHICLE_PASS;
+
+//					LOGGER_LOG("'WAIT_BARRIER_RAISE' > 'WAIT_VEHICLE_PASS'.\n"); // Print para debug.
+				}
+
+				break;
+
+			case ST_SYS_XX_WAIT_VEHICLE_PASS:
+
+				if ((true == p_task_system_dta->flag) && ( (EV_SYS_XX_IR_DOWN == p_task_system_dta->event) || (EV_SYS_XX_MANUAL_UP == p_task_system_dta->event)))
+				{
+					p_task_system_dta->flag = false;
+					put_event_task_actuator(EV_LED_XX_ON, ID_LED_A); // UPDATE LED ONCE THAT'S IMPLEMENTED.
+					p_task_system_dta->state = ST_SYS_XX_WAIT_BARRIER_LOWER;
+
+//					LOGGER_LOG("'WAIT_VEHICLE_PASS' > 'WAIT_BARRIER_LOWER'.\n"); // Print para debug.
+				}
+
+				break;
+
+			case ST_SYS_XX_WAIT_BARRIER_LOWER:
+
+				if ((true == p_task_system_dta->flag) && (EV_SYS_XX_HORZ_LIMIT_UP == p_task_system_dta->event))
+				{
+					p_task_system_dta->flag = false;
+					put_event_task_actuator(EV_LED_XX_OFF, ID_LED_A); // UPDATE LED ONCE THAT'S IMPLEMENTED.
+					p_task_system_dta->state = ST_SYS_XX_WAIT_VEHICLE;
+
+//					LOGGER_LOG("'WAIT_BARRIER_LOWER' > 'WAIT_VEHICLE'.\n"); // Print para debug.
 				}
 
 				break;

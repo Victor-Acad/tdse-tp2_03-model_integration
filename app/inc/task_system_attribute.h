@@ -61,13 +61,39 @@ extern "C" {
  * 	------------------------+-----------------------+-----------------------+-----------------------+------------------------
  */
 
+/* System Model for Parking Lot Entrance (Taller de Sistemas Embebidos TP 2).
+ *
+ *                   |------------------------- Go back to initial state ----------------------------|
+ *                   v                                                                               |
+ * ST_SYS_XX_WAIT_VEHICLE --> Wait for 'EV_SYS_XX_LOOP_DETECTOR_UP' or 'EV_SYS_XX_MANUAL_UP' -       |
+ *                                                                                           |       |
+ * |------------------------------------------------------------------------------------------       |
+ * v                                                                                                 |
+ * ST_SYS_XX_WAIT_BARRIER_RAISE --> Wait for 'EV_SYS_XX_VERT_LIMIT_UP' -----------------------       |
+ *                                                                                           |       |
+ * |------------------------------------------------------------------------------------------       |
+ * v                                                                                                 |
+ * ST_SYS_XX_WAIT_VEHICLE_PASS --> Wait for 'EV_SYS_XX_IR_DOWN' or 'EV_SYS_XX_MANUAL_UP' -----       |
+ *                                                                                           |       |
+ * |------------------------------------------------------------------------------------------       |
+ * v                                                                                                 |
+ * ST_SYS_XX_WAIT_BARRIER_LOWER --> Wait for 'EV_SYS_XX_HORZ_LIMIT_UP' -------------------------------
+ *
+ */
+
 /* Events to excite Task System */
-typedef enum task_system_ev {EV_SYS_XX_IDLE,
-							 EV_SYS_XX_ACTIVE} task_system_ev_t;
+typedef enum task_system_ev {EV_SYS_XX_LOOP_DETECTOR_UP,
+							 EV_SYS_XX_VERT_LIMIT_UP,
+							 EV_SYS_XX_IR_DOWN,
+							 EV_SYS_XX_HORZ_LIMIT_UP,
+							 EV_SYS_XX_MANUAL_UP,
+                             EV_SYS_XX_DUMMY} task_system_ev_t;
 
 /* State of Task System */
-typedef enum task_system_st {ST_SYS_XX_IDLE,
-							 ST_SYS_XX_ACTIVE} task_system_st_t;
+typedef enum task_system_st {ST_SYS_XX_WAIT_VEHICLE,
+							 ST_SYS_XX_WAIT_BARRIER_RAISE,
+							 ST_SYS_XX_WAIT_VEHICLE_PASS,
+							 ST_SYS_XX_WAIT_BARRIER_LOWER} task_system_st_t;
 
 typedef struct
 {

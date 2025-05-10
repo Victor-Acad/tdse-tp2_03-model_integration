@@ -61,18 +61,18 @@
 
 /********************** internal data declaration ****************************/
 const task_sensor_cfg_t task_sensor_cfg_list[] = {
-	{ID_BTN_A,  BTN_A_PORT,  BTN_A_PIN,  BTN_A_PRESSED, DEL_BTN_XX_MAX,
-	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE},
-	 {ID_BTN_B,  BTN_B_PORT,  BTN_B_PIN,  BTN_B_PRESSED, DEL_BTN_XX_MAX,
-	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE},
-	 {ID_BTN_C,  BTN_C_PORT,  BTN_C_PIN,  BTN_C_PRESSED, DEL_BTN_XX_MAX,
-	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE},
-	 {ID_BTN_D,  BTN_D_PORT,  BTN_D_PIN,  BTN_D_PRESSED, DEL_BTN_XX_MAX,
-	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE},
-	 {ID_SW_A,  SW_A_PORT,  SW_A_PIN,  SW_A_PRESSED, DEL_BTN_XX_MAX,
-	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE},
-	 {ID_SW_B,  SW_B_PORT,  SW_B_PIN,  SW_B_PRESSED, DEL_BTN_XX_MAX,
-	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE}
+	{ID_BTN_A,  BTN_A_PORT,  BTN_A_PIN,  BTN_A_PRESSED, DEL_BTN_XX_MAX,  // Botón azul. Sin uso.
+	 EV_SYS_XX_DUMMY,  EV_SYS_XX_DUMMY},
+	 {ID_BTN_B,  BTN_B_PORT,  BTN_B_PIN,  BTN_B_PRESSED, DEL_BTN_XX_MAX, // Detector de presencia.
+	 EV_SYS_XX_DUMMY,  EV_SYS_XX_LOOP_DETECTOR_UP},
+	 {ID_BTN_C,  BTN_C_PORT,  BTN_C_PIN,  BTN_C_PRESSED, DEL_BTN_XX_MAX, // Sensor IR.
+	 EV_SYS_XX_IR_DOWN,  EV_SYS_XX_DUMMY},
+	 {ID_BTN_D,  BTN_D_PORT,  BTN_D_PIN,  BTN_D_PRESSED, DEL_BTN_XX_MAX, // Botón manual.
+	 EV_SYS_XX_DUMMY,  EV_SYS_XX_MANUAL_UP},
+	 {ID_SW_A,  SW_A_PORT,  SW_A_PIN,  SW_A_PRESSED, DEL_BTN_XX_MAX,     // Fin de carrera para la posición vertical.
+	 EV_SYS_XX_DUMMY,  EV_SYS_XX_VERT_LIMIT_UP},
+	 {ID_SW_B,  SW_B_PORT,  SW_B_PIN,  SW_B_PRESSED, DEL_BTN_XX_MAX,     // Fin de carrera para la posición horizontal.
+	 EV_SYS_XX_DUMMY,  EV_SYS_XX_HORZ_LIMIT_UP}
 };
 
 #define SENSOR_CFG_QTY	(sizeof(task_sensor_cfg_list)/sizeof(task_sensor_cfg_t))
